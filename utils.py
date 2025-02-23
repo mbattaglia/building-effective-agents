@@ -4,7 +4,6 @@ from langchain.prompts import PromptTemplate
 from langchain_core.language_models import BaseLanguageModel
 from typing import List, Iterator
 from pydantic import BaseModel, Field
-from transformers import AutoTokenizer
 
 
 ##### Classes definition
