@@ -24,6 +24,8 @@ I will process a batch of multiple files at the same time.
 - [Directly calling LLMs](1-DirectCall.ipynb)
 - [Workflow: Prompt Chaining](2-Workflows-Prompt-Chaining.ipynb)
 - [Workflow: Routing](3-Workflows-Routing.ipynb)
+- Single Agent (coming soon!)
+- Multi Agents (coming soon!)
 
 ## How to use this repo
 Simply open each notebook and run the cells.
