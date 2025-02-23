@@ -40,6 +40,7 @@ There are a couple of design decisions that I took that I think are worth pointi
   - It also abstracts away some of the complexities of building agents.
   - Pydantic: A great library for defining and validating schemas, converting types and more.
 - LangGraph: Primarily here for building workflows. While we could manually build workflows with bare Python, LangGraph makes this a lot easier. As a bonus, being able to export worflows diagrams as png files makes explaining this a lot easier.
+- Concurrency: While I use concurrency in a file loader function, I am not using it when making LLM calls. The reason is that I am using a local LLM and my GPU cannot handle multiple concurrent requests. If your LLM does, it would be a great idea to implement it :)
 
 ### A little note about schema validation
 
