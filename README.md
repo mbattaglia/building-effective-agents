@@ -46,7 +46,7 @@ While some may argue that this is not strictly necessary, it is nice to have and
 I've decided to use a small number of libraries. Here are the reasons:
 
 - LangChain: There are three main reasons on why I have chosen to use langchain:
-  - Abstract away LLM integrations, messaging formatting and more. For this repo, I will be using a local LLM served using [LM Studio](https://lmstudio.ai/), but others may want to use different LLMs. Using LangChain makes it easier for other people to just change a cell and use the LLM of their choice. 
+  - Abstract away LLM integrations, messaging formatting and more. For this repo, I will be using a mix between a local LLM served using [LM Studio](https://lmstudio.ai/) and the Anthropic API, but others may want to use different LLMs. Using LangChain makes it easier for other people to just change a cell and use the LLM of their choice.
   - Using `with_structured_output` makes it easy to force schema validation. More info available [here](https://python.langchain.com/docs/how_to/structured_output/).
   - It also abstracts away some of the complexities of building agents.
 - Pydantic: A great library for defining and validating schemas, converting types and more.
