@@ -4,6 +4,76 @@ from langchain.prompts import PromptTemplate
 from langchain_core.language_models import BaseLanguageModel
 from typing import List, Iterator
 from pydantic import BaseModel, Field
+from dotenv import load_dotenv
+
+def load_llm() -> BaseLanguageModel:
+    load_dotenv()
+
+    max_tokens = int(os.getenv("MAX_TOKENS")) if os.getenv("MAX_TOKENS") else 8192
+    temperature = float(os.getenv("TEMPERATURE")) if os.getenv("TEMPERATURE") else 0.1
+    top_p = float(os.getenv("TOP_P")) if os.getenv("TOP_P") else 0.4
+    
+    print("Loading LLM...")
+    print("Parameters:")
+    print(f"max_tokens: {max_tokens}, temperature: {temperature}, top_p: {top_p}")
+
+    # LM Studio
+    if os.getenv('USE_LMSTUDIO'):
+        model = os.getenv("MODEL") if os.getenv("MODEL") else "qwen2.5-7b-instruct-1m"
+
+        from langchain_openai import ChatOpenAI
+
+        print("Using LMStudio")
+
+        llm = ChatOpenAI(
+            base_url="http://localhost:1234/v1", # local LLM
+            model=model,
+            temperature=temperature,
+            top_p=top_p,
+            max_tokens=max_tokens,
+            timeout=None,
+            max_retries=2
+        )
+        return llm
+    # OpenAI
+    elif os.getenv('OPENAI_API_KEY'):
+        print()
+        from langchain_openai import ChatOpenAI
+
+        model = os.getenv("MODEL") if os.getenv("MODEL") else "gpt-4o-mini-2024-07-18"
+
+        print(f"Using OpenAI. Model: {model}")
+
+        llm = ChatOpenAI(
+            model=model,
+            temperature=temperature,
+            top_p=top_p,
+            max_tokens=max_tokens,
+            timeout=None,
+            max_retries=2
+        )
+        return llm
+    # Anthropic
+    elif os.getenv('ANTHROPIC_API_KEY'):
+        from langchain_anthropic import ChatAnthropic
+
+        model = os.getenv("MODEL") if os.getenv("MODEL") else "claude-3-7-latest"
+
+        print(f"Using Anthropic. Model: {model}")
+
+        llm = ChatAnthropic(
+            model=model,
+            temperature=temperature,
+            top_p=top_p,
+            max_tokens=max_tokens,
+            timeout=None,
+            max_retries=2
+        )
+        return llm
+    else:
+        print("Failed to load LLM")
+        raise ValueError("Missing LLM configuration")
+
 
 
 ##### Classes definition
@@ -193,7 +263,7 @@ def return_main_topic_identification_prompt() -> str:
     the main topics across all text. There could be multiple main
     topics. For each topic provide:
     - its name
-    - a brief description
+    - a brief description (less than 100 characters)
     """
 
     prompt = PromptTemplate(

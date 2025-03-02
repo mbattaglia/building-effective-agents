@@ -28,25 +28,33 @@ I will process a batch of multiple files at the same time.
 - Multi Agents (coming soon!)
 
 ## How to use this repo
-Simply open each notebook and run the cells.
-Each notebook is auto-contained, including dependencies installation, utils, etc.
-In the [Directly calling LLMs](1-DirectCall.ipynb) notebook we define some classes and functions that are later exported into the [utils.py](utils.py) file for convenience.
+1. Copy `.dot.env` to `.env`.
+2. Fill in the API key for your desired provider. You can also change inference parameters if needed. Since this repo uses LangChain for LLM integration, you can check which LLMs are supported [here](https://python.langchain.com/docs/integrations/llms/).
+3. Then, simply open each notebook and run the cells. Each notebook is auto-contained, including dependencies installation, utils, etc.
+
+Some notebooks (such as in the [Directly calling LLMs](1-DirectCall.ipynb)), we define some helper functions and classes that are later re-used. I've exported those to the [utils.py](utils.py) file for convenience.
 
 ## Design decisions
 There are a couple of design decisions that I took that I think are worth pointing out:
 
-- Forcing schema on LLM outputs: while some may argue that this is not strictly necessary for the "Directly Call LLMs" approach, it is nice to have and even necessary for some of the workflow implementations.
+### Forcing schema on LLM outputs
+Since LLMs do not inherently return structured output, this makes it hard to extract information out of their responses. But why do we want to have an structured output? The answer is integrations - what if we want to pass along the response from an LLM response into something else?
+
+While some may argue that this is not strictly necessary, it is nice to have and makes some implementations a lot easier.
+
+### External Libraries
+I've decided to use a small number of libraries. Here are the reasons:
+
 - LangChain: There are three main reasons on why I have chosen to use langchain:
   - Abstract away LLM integrations, messaging formatting and more. For this repo, I will be using a local LLM served using [LM Studio](https://lmstudio.ai/), but others may want to use different LLMs. Using LangChain makes it easier for other people to just change a cell and use the LLM of their choice. 
   - Using `with_structured_output` makes it easy to force schema validation. More info available [here](https://python.langchain.com/docs/how_to/structured_output/).
   - It also abstracts away some of the complexities of building agents.
-  - Pydantic: A great library for defining and validating schemas, converting types and more.
+- Pydantic: A great library for defining and validating schemas, converting types and more.
 - LangGraph: Primarily here for building workflows. While we could manually build workflows with bare Python, LangGraph makes this a lot easier. As a bonus, being able to export worflows diagrams as png files makes explaining this a lot easier.
-- Concurrency: While I use concurrency in a file loader function, I am not using it when making LLM calls. The reason is that I am using a local LLM and my GPU cannot handle multiple concurrent requests. If your LLM does, it would be a great idea to implement it :)
 
-### A little note about schema validation
+### Concurrency:
+While I use concurrency in a file loader function, I am not using it when making LLM calls. The reason is that I am using a local LLM and my GPU cannot handle multiple concurrent requests. If your LLM does, it would be a great idea to implement it :)
 
-LLMs do not inherently return structured output, making it hard to extract information out of their responses. But why do we want to have an structured output? The answer is integrations - what if we want to pass along the response from an LLM response into something else?
 
 ### A little note about prompt security
 A big disclaimer I want to make upfront: I am not implementing proper input sanitization to prompts. The reasoning is that I have direct control on the input files I am using. I will use Langchain's [PromptTemplates](https://python.langchain.com/docs/concepts/prompt_templates/) to help with this.
