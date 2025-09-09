@@ -24,8 +24,6 @@ I will process a batch of multiple files at the same time.
 - [Directly calling LLMs](1-DirectCall.ipynb)
 - [Workflow: Prompt Chaining](2-Workflows-Prompt-Chaining.ipynb)
 - [Workflow: Routing](3-Workflows-Routing.ipynb)
-- Single Agent (coming soon!)
-- Multi Agents (coming soon!)
 
 ## How to use this repo
 1. Copy `.dot.env` to `.env`.
@@ -58,3 +56,4 @@ While I use concurrency in a file loader function, I am not using it when making
 
 ### A little note about prompt security
 A big disclaimer I want to make upfront: I am not implementing proper input sanitization to prompts. The reasoning is that I have direct control on the input files I am using. I will use Langchain's [PromptTemplates](https://python.langchain.com/docs/concepts/prompt_templates/) to help with this.
+
